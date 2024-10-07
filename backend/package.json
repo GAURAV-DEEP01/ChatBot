@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts"
   },
   "keywords": [],
   "author": "gd",
@@ -12,11 +13,14 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
+    "express-session": "^1.0.0",
     "openai": "^4.67.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "uid2": "^1.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.0",
     "@types/node": "^22.7.4",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2"

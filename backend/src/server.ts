@@ -1,18 +1,34 @@
-import express from "express"; 
 import dotenv from "dotenv";
-const app = express();
 dotenv.config();
+
+import express from "express";
+import session from "express-session"
+
+import { chatRoute } from "./api";
+const app = express();
 
 const port = Number(process.env.PORT) || 9090;
 
-app.get("/chat", (_, res)=>{
-    res.send("test.... chating");
+app.use(express.json())
+app.use(session({
+    secret: "something",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60000 * 60
+    }
+}));
+
+app.post("/", (req, res) => {
+    res.json({ msg: "Use '/chat' route to chat with AI" })
+});
+
+app.post("/chat", chatRoute)
+
+app.all("*", (_, res) => {
+    res.status(404).json({ success: false, msg: "Invalid route" });
 })
 
-app.all("*",(_, res)=>{
-    res.status(404).send({msg: "Invalid route"});
-})
-
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log(`listening on port ${port}`);
 })
