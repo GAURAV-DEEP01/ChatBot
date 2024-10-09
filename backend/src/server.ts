@@ -3,12 +3,16 @@ dotenv.config();
 
 import express from "express";
 import session from "express-session"
+import cors from "cors"
 
 import { chatRoute } from "./api";
 const app = express();
 
 const port = Number(process.env.PORT) || 9090;
 
+app.use(cors({
+    origin: "*",
+}))
 app.use(express.json())
 app.use(session({
     secret: "something",
@@ -19,7 +23,7 @@ app.use(session({
     }
 }));
 
-app.post("/", (req, res) => {
+app.post("/", (_, res) => {
     res.json({ msg: "Use '/chat' route to chat with AI" })
 });
 

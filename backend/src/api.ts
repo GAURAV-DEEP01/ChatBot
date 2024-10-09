@@ -5,7 +5,7 @@ import { ChatBlock_t, Chats_t, GeminiChatBlock_t, GeminiChats_t } from "types/ch
 import { ISession } from "types/express-session";
 dotenv.config();
 
-const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.AI_API_KEY_G}`;
+const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.AI_API_KEY}`;
 
 export const convertToChatObject = (data: GeminiChats_t): Chats_t => {
     const convertedChat: Chats_t = []
@@ -28,43 +28,54 @@ export const chatWithGemini = async (data: GeminiChats_t): Promise<string> => {
             body: JSON.stringify({ contents: data }),
         })
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
         }
         // this instead of stream, so it'll be eazy on the frontend
         const res = await response.json();
         return res?.candidates[0]?.content?.parts[0]?.text;
     } catch (err) {
+        console.log(err)
         throw err;
     }
 }
 
 export const chatRoute = async (req, res) => {
-    const { chat } = req.body;
-    const userSession = req.session as ISession;
-    const userNewChatBlock: GeminiChatBlock_t = {
-        parts: [
-            {
-                text: chat,
-            },
-        ],
-        role: "user",
-    };
+    try {
+        const { chat } = req.body;
+        const userSession = req.session as ISession;
+        const userNewChatBlock: GeminiChatBlock_t = {
+            parts: [
+                {
+                    text: chat,
+                },
+            ],
+            role: "user",
+        };
 
-    if (!userSession.userGeminiChat) {
-        userSession.userGeminiChat = []
+        if (!userSession.userGeminiChat) {
+            userSession.userGeminiChat = []
+        }
+        userSession.userGeminiChat.push(userNewChatBlock)
+        const responseChat = await chatWithGemini(userSession.userGeminiChat)
+        if (responseChat) {
+            const botResponseChatBlock: GeminiChatBlock_t = {
+                parts: [
+                    {
+                        text: responseChat,
+                    },
+                ],
+                role: "model",
+            };
+            userSession.userGeminiChat.push(botResponseChatBlock);
+            const data = convertToChatObject(userSession.userGeminiChat);
+            console.log(data)
+            res.json({ success: true, data });
+            return;
+        }
+        res.status(501).json({ success: false });
+    } catch (err) {
+        console.error(err)
+        res.status(501).json({ success: false })
     }
-    userSession.userGeminiChat.push(userNewChatBlock)
-    const responseChat = await chatWithGemini(userSession.userGeminiChat)
-    const botResponseChatBlock: GeminiChatBlock_t = {
-        parts: [
-            {
-                text: responseChat,
-            },
-        ],
-        role: "model",
-    };
-    userSession.userGeminiChat.push(botResponseChatBlock);
-    const data = convertToChatObject(userSession.userGeminiChat);
-    res.send({ success: true, data });
 }
 

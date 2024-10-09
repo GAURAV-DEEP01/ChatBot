@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="client.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="client.css" />
     <title>AI Chatbot</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="chatbot">
-        <div class="header-container">
-          <img src="Images/bot.svg" alt="">
-          <p class="header">CHATBOT</p>
+      <div class="header-container">
+        <img src="Images/bot.svg" alt="" />
+        <p class="header">CHATBOT</p>
+      </div>
+
+      <div class="chat-container" id="conv-container">
+        <div class="bot-container">
+          <img src="Images/bot.svg" alt="" />
+          <p class="bot-message">How can I help you?</p>
         </div>
-    
-        <div class="chat-container">
-          <div class="bot-container">
-            <img src="Images/bot.svg" alt="">
-            <p class="bot-message" >Hi!&#128075 How can i help you ?</p>
-          </div>
-          <div class="user-container">
-            <p class="user">You</p>
-            <p class="user-message">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Reprehenderit, rem exercitationem! Sapiente officiis, accusamus, facere temporibus odio obcaecati omnis nesciunt ullam earum, tempora id nihil dolor. Odio sapiente optio doloremque.</p>
-          </div>
-        </div>
-    
-        <div class="search-container">
-          <input class="search-bar" type="text" placeholder="Enter your message">
-          <img class="send-button" src="Images/send.svg" alt="">
-    </div>      
-</body>
+      </div>
+
+      <div class="search-container">
+        <input
+          class="search-bar"
+          id="question-field"
+          type="text"
+          placeholder="Enter your message"
+          autocomplete="off"
+        />
+        <img
+          class="send-button"
+          id="send-question"
+          src="Images/send.svg"
+          alt=""
+        />
+      </div>
+    </div>
+    <script src="client.js"></script>
+  </body>
 </html>
