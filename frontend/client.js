@@ -16,7 +16,7 @@ const askQuestion = async (question) => {
     const data = await response.json();
     if (data.success === true) renderChat(data.data);
   } catch (err) {
-    console.err(err);
+    console.error(err);
   }
 };
 
@@ -31,7 +31,7 @@ const renderChat = (chat) => {
       you.innerText = "You";
       const userMessage = document.createElement("p");
       userMessage.setAttribute("class", "user-message");
-      userMessage.innerText = e.content;
+      userMessage.innerHTML = e.content;
       chatBlock.append(you);
       chatBlock.append(userMessage);
       convoContainer.append(chatBlock);
@@ -41,7 +41,7 @@ const renderChat = (chat) => {
       image.setAttribute("src", "Images/bot.svg");
       const botMessage = document.createElement("p");
       botMessage.setAttribute("class", "bot-message");
-      botMessage.innerText = e.content;
+      botMessage.innerHTML = marked.parse(e.content);
       chatBlock.append(image);
       chatBlock.append(botMessage);
       convoContainer.append(chatBlock);
