@@ -68,9 +68,7 @@ export const chatRoute = async (req, res) => {
             };
             userSession.userGeminiChat.push(botResponseChatBlock);
             const data = convertToChatObject(userSession.userGeminiChat);
-            console.log(data)
-            res.json({ success: true, data });
-            return;
+            return res.json({ success: true, data });
         }
         res.status(501).json({ success: false });
     } catch (err) {

@@ -20,40 +20,53 @@ const askQuestion = async (question) => {
   }
 };
 
+const convoContainer = document.getElementById("conv-container");
 const renderChat = (chat) => {
-  const convoContainer = document.getElementById("conv-container");
   chat.forEach((e) => {
-    const chatBlock = document.createElement("div");
-    if (e.role === "user") {
-      chatBlock.setAttribute("class", "user-container");
-      const you = document.createElement("p");
-      you.setAttribute("class", "user");
-      you.innerText = "You";
-      const userMessage = document.createElement("p");
-      userMessage.setAttribute("class", "user-message");
-      userMessage.innerHTML = e.content;
-      chatBlock.append(you);
-      chatBlock.append(userMessage);
-      convoContainer.append(chatBlock);
-    } else if (e.role === "model") {
-      chatBlock.setAttribute("class", "bot-container");
-      const image = document.createElement("img");
-      image.setAttribute("src", "Images/bot.svg");
-      const botMessage = document.createElement("p");
-      botMessage.setAttribute("class", "bot-message");
-      botMessage.innerHTML = marked.parse(e.content);
-      chatBlock.append(image);
-      chatBlock.append(botMessage);
-      convoContainer.append(chatBlock);
+    if (e.role === "model") {
+      createBotChatBlock(e.content);
     }
   });
+};
+
+const createBotChatBlock = (content) => {
+  const chatBlock = document.createElement("div");
+  chatBlock.setAttribute("class", "bot-container");
+  const image = document.createElement("img");
+  image.setAttribute("src", "Images/bot.svg");
+  const botMessage = document.createElement("p");
+  botMessage.setAttribute("class", "bot-message");
+  botMessage.innerHTML = marked.parse(content);
+  chatBlock.append(image);
+  chatBlock.append(botMessage);
+  convoContainer.append(chatBlock);
+
+  return chatBlock;
+};
+
+const createUserChatBlock = (content) => {
+  const chatBlock = document.createElement("div");
+  chatBlock.setAttribute("class", "user-container");
+  const you = document.createElement("p");
+  you.setAttribute("class", "user");
+  you.innerText = "You";
+  const userMessage = document.createElement("p");
+  userMessage.setAttribute("class", "user-message");
+  userMessage.innerHTML = content;
+  chatBlock.append(you);
+  chatBlock.append(userMessage);
+  convoContainer.append(chatBlock);
 };
 
 const sendQuestion = async () => {
   const questionField = document.getElementById("question-field");
   let question = questionField.value;
   questionField.value = "";
+
+  createUserChatBlock(question);
+  const typing = createBotChatBlock("...");
   if (question) await askQuestion(question.trim());
+  typing.remove();
 };
 const sendBtn = document.getElementById("send-question");
 sendBtn.addEventListener("click", (_) => {
