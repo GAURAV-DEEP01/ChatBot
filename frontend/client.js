@@ -1,6 +1,6 @@
 const askQuestion = async (question) => {
   try {
-    const response = await fetch("https://chatbot-cks6.onrender.com/", {
+    const response = await fetch("https://chatbot-cks6.onrender.com/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
