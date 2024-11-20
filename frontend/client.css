@@ -7,16 +7,11 @@
   box-sizing: border-box;
 }
 
-.header-container img {
-  width: 1em;
-  align-self: center;
-}
-
 body {
   display: flex;
-  background-color: #1c1e3a;
   align-items: center;
   justify-content: center;
+  background-color: #1c1e3a;
   height: 100vh;
 }
 
@@ -44,6 +39,11 @@ body {
   color: #f4f4f9;
 }
 
+.header-container img {
+  width: 1em;
+  align-self: center;
+}
+
 .chat-container {
   padding: 0.5em 0.8em;
   height: 100%;
@@ -54,8 +54,9 @@ body {
 .user-container {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.2em;
-  padding: 0.8em;
+  padding: 10px 40px;
   margin-bottom: 1em;
   align-items: flex-start;
   line-height: 1.4em;
@@ -113,18 +114,18 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #6a67ce;
   padding: 3px;
   color: white;
-}
-
-.send-button:active {
-  transform: scale(0.9);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .send-button:hover {
   background-color: #b3b2f2;
+}
+
+.send-button:active {
+  transform: scale(0.9);
 }
 
 .chat-container::-webkit-scrollbar {
@@ -149,18 +150,46 @@ body {
   outline-color: #6a67ce;
 }
 
-@media (max-width: 625px) {
+@media (max-width: 1025px) {
   .chatbot {
-    border-radius: 0%;
     width: 100vw;
     height: 100vh;
+    border-radius: 0;
   }
+
+  .header-container {
+    border-radius: 0 0 25px 25px;
+  }
+
   .bot-container,
   .user-container {
     width: 80%;
-    word-wrap: break-word;
+    padding: 10px;
   }
-  .header-container {
-    border-radius: 0px 0px 25px 25px;
+
+  .bot-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    max-width: 90%;
+    width: fit-content;
+    margin-right: auto;
+  }
+
+  .bot-message,
+  .user-message {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    padding: 5px;
+    background-color: #f0f0f000;
+    border-radius: 10px;
+  }
+
+  .bot-message {
+    background-color: #f0f0f000;
+    margin-right: 10px;
   }
 }
