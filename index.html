@@ -3,41 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./frontend/client.css" />
+    <title>AI Companion</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <title>AI Chatbot</title>
+    <style>
+      .scrollbar-custom::-webkit-scrollbar {
+        width: 6px;
+      }
+      .scrollbar-custom::-webkit-scrollbar-track {
+        background: #2d3748;
+      }
+      .scrollbar-custom::-webkit-scrollbar-thumb {
+        background: #4a5568;
+        border-radius: 4px;
+      }
+      .chat-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+    </style>
   </head>
+  <body class="bg-gray-900 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-xl mx-auto">
+      <div
+        class="bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700 flex flex-col h-[600px]"
+      >
+        <div class="chat-gradient px-6 py-4 flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <div>
+              <h2 class="text-white text-lg font-semibold">AI Companion</h2>
+            </div>
+          </div>
+          <button
+            id="clear-chat"
+            class="flex items-center space-x-2 px-4 py-2 text-white font-medium bg-purple-600 rounded-lg hover:bg-purple-700 transition"
+            title="Start a New Chat"
+          >
+            <span>New Chat</span>
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
 
-  <body>
-    <div class="chatbot">
-      <div class="header-container">
-        <img src="./Images/bot.svg" alt="" />
-        <p class="header">CHATBOT</p>
-      </div>
+        <div
+          id="chat-container"
+          class="overflow-y-auto scrollbar-custom px-6 py-4 space-y-4"
+          style="flex-grow: 1; max-height: calc(100% - 128px)"
+        >
+          <div class="flex">
+            <div class="bg-gray-700 text-white p-3 rounded-lg max-w-[80%]">
+              Hello! I'm your AI companion. How can I assist you today?
+            </div>
+          </div>
+        </div>
 
-      <div class="chat-container" id="conv-container">
-        <div class="bot-container">
-          <img src="Images/bot.svg" alt="" />
-          <p class="bot-message">How can I help you?</p>
+        <div class="bg-gray-800 border-t border-gray-700 px-6 py-4">
+          <div class="flex items-center space-x-3">
+            <input
+              id="question-field"
+              type="text"
+              placeholder="Type your message..."
+              class="flex-grow bg-gray-700 text-white px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-600"
+            />
+            <button
+              id="send-question"
+              class="bg-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center hover:bg-purple-700 transition group"
+            >
+              <i
+                class="fas fa-paper-plane transform group-hover:scale-110 transition-transform"
+              ></i>
+            </button>
+          </div>
         </div>
       </div>
-
-      <div class="search-container">
-        <input
-          class="search-bar"
-          id="question-field"
-          type="text"
-          placeholder="Enter your message"
-          autocomplete="off"
-        />
-        <img
-          class="send-button"
-          id="send-question"
-          src="Images/send.svg"
-          alt=""
-        />
-      </div>
     </div>
+
     <script src="./frontend/client.js"></script>
   </body>
 </html>

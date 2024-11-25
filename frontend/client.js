@@ -1,3 +1,9 @@
+const chatContainer = document.getElementById("chat-container");
+const questionField = document.getElementById("question-field");
+const sendBtn = document.getElementById("send-question");
+const clearBtn = document.getElementById("clear-chat");
+let userChats = [];
+
 const askQuestion = async (question) => {
   try {
     const response = await fetch("https://chatbot-cks6.onrender.com/chat", {
@@ -6,13 +12,15 @@ const askQuestion = async (question) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        chat: question,
+        chat: userChats,
       }),
     });
+
     if (!response.ok) {
-      console.error(`Error fetching from server! status: ${response.status}`);
+      console.error(`Error fetching from server! Status: ${response.status}`);
       return;
     }
+
     const data = await response.json();
     if (data.success === true) renderChat(data.data);
   } catch (err) {
@@ -20,7 +28,6 @@ const askQuestion = async (question) => {
   }
 };
 
-const convoContainer = document.getElementById("conv-container");
 const renderChat = (chat) => {
   chat.forEach((e) => {
     if (e.role === "model") {
@@ -31,50 +38,69 @@ const renderChat = (chat) => {
 
 const createBotChatBlock = (content) => {
   const chatBlock = document.createElement("div");
-  chatBlock.setAttribute("class", "bot-container");
-  const image = document.createElement("img");
-  image.setAttribute("src", "Images/bot.svg");
-  const botMessage = document.createElement("p");
-  botMessage.setAttribute("class", "bot-message");
-  botMessage.innerHTML = marked.parse(content);
-  chatBlock.append(image);
-  chatBlock.append(botMessage);
-  convoContainer.append(chatBlock);
+  chatBlock.classList.add("flex");
+
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add(
+    "bg-gray-700",
+    "text-white",
+    "p-3",
+    "rounded-lg",
+    "max-w-[80%]"
+  );
+  messageDiv.innerHTML = marked.parse(content);
+
+  chatBlock.appendChild(messageDiv);
+
+  chatContainer.appendChild(chatBlock);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 
   return chatBlock;
 };
 
 const createUserChatBlock = (content) => {
   const chatBlock = document.createElement("div");
-  chatBlock.setAttribute("class", "user-container");
-  const you = document.createElement("p");
-  you.setAttribute("class", "user");
-  you.innerText = "You";
-  const userMessage = document.createElement("p");
-  userMessage.setAttribute("class", "user-message");
-  userMessage.innerHTML = content;
-  chatBlock.append(you);
-  chatBlock.append(userMessage);
-  convoContainer.append(chatBlock);
+  chatBlock.classList.add("flex", "justify-end");
+
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add(
+    "bg-purple-600",
+    "text-white",
+    "p-3",
+    "rounded-lg",
+    "max-w-[80%]"
+  );
+  messageDiv.textContent = content;
+
+  chatBlock.appendChild(messageDiv);
+  chatContainer.appendChild(chatBlock);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 };
 
 const sendQuestion = async () => {
-  const questionField = document.getElementById("question-field");
-  let question = questionField.value;
-  questionField.value = "";
+  const question = questionField.value.trim();
+  if (!question) return;
 
+  questionField.value = "";
   createUserChatBlock(question);
-  const typing = createBotChatBlock("...");
-  if (question) await askQuestion(question.trim());
-  typing.remove();
+  userChats.push({ role: "user", content: question });
+  const typingBlock = createBotChatBlock("...");
+  await askQuestion(question);
+  typingBlock.remove();
 };
-const sendBtn = document.getElementById("send-question");
-sendBtn.addEventListener("click", (_) => {
-  sendQuestion();
+
+sendBtn.addEventListener("click", sendQuestion);
+questionField.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendQuestion();
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key == "Enter") {
-    sendQuestion();
-  }
+clearBtn.addEventListener("click", () => {
+  chatContainer.innerHTML = `
+          <div class="flex">
+              <div class="bg-gray-700 text-white p-3 rounded-lg max-w-[80%]">
+                  Hello! I'm your AI companion. How can I assist you today?
+              </div>
+          </div>
+      `;
+  userChats = [];
 });
